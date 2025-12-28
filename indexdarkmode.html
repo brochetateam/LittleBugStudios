@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LittleBug Studios - Shadow Mode</title>
+
+    <!-- Google Fonts: Horror & Grunge -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Creepster&family=Metal+Mania&family=Oswald:wght@700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-dark: #050505;
+            --red-blood: #8b0000;
+            --red-bright: #ff0000;
+            --yellow-accent: #ffcc00;
+            --blue-accent: #00ffff;
+            --text-light: #e0e0e0;
+            --font-horror: 'Creepster', cursive;
+            --font-metal: 'Metal Mania', cursive;
+            --font-sans: 'Oswald', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            font-family: var(--font-sans);
+            overflow-x: hidden;
+        }
+
+        /* --- HEADER: Honeycomb/Dripping Style --- */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 110px;
+            /* Un poco más alto */
+            background: linear-gradient(180deg, #1a0000 0%, #2b0000 70%, transparent 100%);
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 25px 5%;
+            /* Más padding top para bajarlo */
+            /* Jagged Bottom Edge */
+            clip-path: polygon(0% 0%, 100% 0%, 100% 70%,
+                    95% 85%, 90% 70%, 85% 85%, 80% 70%, 75% 90%,
+                    70% 70%, 65% 90%, 60% 70%, 55% 85%, 50% 70%,
+                    45% 90%, 40% 70%, 35% 85%, 30% 70%, 25% 90%,
+                    20% 70%, 15% 85%, 10% 70%, 5% 90%, 0% 70%);
+            border-bottom: 5px solid var(--red-blood);
+        }
+
+        .nav-logo img {
+            height: 50px;
+            filter: drop-shadow(0 0 5px var(--red-bright));
+        }
+
+        nav ul {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+            margin-top: 10px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-family: var(--font-horror);
+            font-size: 1.5rem;
+            text-shadow: 0 2px 5px black;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--yellow-accent);
+        }
+
+        /* --- HERO: Building Creativity --- */
+        #hero {
+            height: 80vh;
+            background: radial-gradient(circle at center, #220000 0%, #000000 80%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* Mysterious "Eye" visual or similar */
+        .hero-eye {
+            font-size: 5rem;
+            color: var(--red-bright);
+            margin-bottom: 20px;
+            animation: pulse-eye 3s infinite;
+        }
+
+        @keyframes pulse-eye {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+
+            50% {
+                transform: scale(1.1);
+                opacity: 1;
+                text-shadow: 0 0 30px var(--red-bright);
+            }
+        }
+
+        /* ===== HERO LAYOUT LIKE REFERENCE ===== */
+
+        /* Main container for the hero content */
+        /* Main container for the hero content */
+        .hero-layout {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            align-items: flex-start;
+            /* Align closer to top so we can push elements down with margin */
+            justify-content: center;
+            gap: 0;
+            padding-top: 50px;
+            /* Give some space */
+        }
+
+        /* Left: "Building Creativity" - overlaps frame from left */
+        /* Left: "Building Creativity" - overlaps frame from left */
+        .hero-text-left {
+            font-family: var(--font-metal);
+            font-size: 3rem;
+            text-transform: uppercase;
+            line-height: 0.85;
+            text-shadow: 3px 3px 0px #000;
+            color: white;
+            z-index: 20;
+            margin-right: -60px;
+            /* Less overlap */
+            margin-top: 180px;
+            /* Move much lower as requested */
+            transform: rotate(-5deg);
+        }
+
+        /* Center: Frame with trapezoid shape - contains branding */
+        /* Center: Frame with trapezoid shape via 3D transform to keep borders visible */
+        .hero-frame {
+            position: relative;
+            width: 800px;
+            height: 350px;
+            border: 8px solid #d4af37;
+            background: rgba(0, 0, 0, 0.8);
+            box-shadow: 0 0 50px rgba(139, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* 3D Transform for Trapezoid effect (Bottom smaller) */
+            transform: perspective(1000px) rotateX(-10deg);
+            /* Remove clip-path so border is continuous */
+            margin-bottom: 20px;
+        }
+
+        /* Studio branding: CENTERED inside frame - logo BESIDE text */
+        /* Studio branding: CENTERED inside frame - Text on Top, Logo Below */
+        .hero-branding {
+            display: flex;
+            flex-direction: column;
+            /* Vertical layout as requested */
+            align-items: center;
+            gap: 10px;
+            z-index: 10;
+            margin-bottom: 80px;
+            /* Adjusted margin */
+        }
+
+        .hero-branding img {
+            width: 140px;
+            filter: drop-shadow(0 0 15px red);
+            /* Removed pulse animation to allow custom movement tracking */
+            transition: transform 0.1s ease-out;
+        }
+
+        .hero-branding h2 {
+            font-family: var(--font-metal);
+            /* Changed to Metal Mania */
+            font-size: 6rem;
+            color: var(--red-bright);
+            text-shadow: 4px 4px 0 black;
+            text-transform: uppercase;
+            line-height: 1;
+            margin: 0;
+            white-space: nowrap;
+        }
+
+        /* Right: "Contact" button - overlaps frame from right */
+        .hero-cta-right {
+            z-index: 20;
+            margin-left: -60px;
+            margin-top: 220px;
+            /* Move much lower */
+        }
+
+        .cta-box {
+            display: inline-block;
+            background: white;
+            color: black;
+            padding: 12px 30px;
+            font-family: var(--font-sans);
+            font-weight: 800;
+            font-size: 1.1rem;
+            border: 3px solid black;
+            box-shadow: 4px 4px 0 var(--red-blood);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .cta-box:hover {
+            background: var(--red-bright);
+            color: white;
+            box-shadow: 0 0 20px red;
+        }
+
+        @keyframes pulse-logo {
+            from {
+                transform: scale(1);
+                filter: drop-shadow(0 0 10px red);
+            }
+
+            to {
+                transform: scale(1.05);
+                filter: drop-shadow(0 0 30px #ff5555);
+            }
+        }
+
+        /* Eye: Simple oval with visible pupil */
+        .eye-wrapper-bottom {
+            margin-top: 50px;
+        }
+
+        .eye-container {
+            width: 140px;
+            height: 70px;
+            background: radial-gradient(ellipse at center, #ff0000 0%, #8b0000 100%);
+            border-radius: 50%;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.8), inset 0 0 20px rgba(0, 0, 0, 0.5);
+            border: 4px solid #000;
+        }
+
+        .eye-ball {
+            width: 50px;
+            height: 50px;
+            background: radial-gradient(circle, #ff3333 0%, #cc0000 100%);
+            border-radius: 50%;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .eye-pupil {
+            width: 15px;
+            height: 25px;
+            background: #000;
+            border-radius: 50%;
+            position: absolute;
+            transition: transform 0.1s ease;
+        }
+
+        .cta-box:hover {
+            transform: rotate(0deg) scale(1.1);
+            background: var(--red-bright);
+            color: white;
+            box-shadow: 5px 5px 0 white;
+        }
+
+        /* New Eye Styles */
+
+        .eye-ball {
+            width: 70px;
+            height: 70px;
+            background: radial-gradient(circle at 30% 30%, #ff5555, #800000);
+            border-radius: 50%;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: inset -5px -5px 10px rgba(0, 0, 0, 0.8);
+        }
+
+        .eye-pupil {
+            width: 25px;
+            height: 25px;
+            background: black;
+            border-radius: 50%;
+            /* Cat eye shape */
+            transform: scaleX(0.4);
+            position: absolute;
+            /* Will be moved by JS */
+        }
+
+        /* --- GAMES: 3 Cards Portrait --- */
+        #games-grid {
+            padding: 5rem 10%;
+            background:
+                repeating-linear-gradient(90deg,
+                    #0a0a0a 0px,
+                    #0a0a0a 40px,
+                    #110000 40px,
+                    #110000 80px);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 60px;
+            position: relative;
+            box-shadow: inset 0 0 100px black;
+        }
+
+        .game-card {
+            position: relative;
+            aspect-ratio: 2/3;
+            background: #222;
+            border: 8px solid white;
+            transition: transform 0.3s;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Hanging effect - simulated with Pseudo-elements later if needed, 
+           for now focus on the rotation and border colors matching reference */
+
+        .card-1 {
+            border-color: #d4af37;
+            transform: rotate(-3deg) translateY(20px);
+            z-index: 2;
+        }
+
+        .card-2 {
+            border-color: #c02e25;
+            transform: rotate(2deg) scale(1.05);
+            z-index: 3;
+            box-shadow: 0 0 30px rgba(192, 46, 37, 0.4);
+        }
+
+        .card-3 {
+            border-color: #00ffff;
+            transform: rotate(-2deg) translateY(40px);
+            z-index: 1;
+        }
+
+
+
+        /* Galaxy/Blue */
+
+        .game-card:hover {
+            transform: scale(1.05) z-index(10);
+            z-index: 10;
+        }
+
+        .game-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(0.4) contrast(1.2);
+            transition: filter 0.3s;
+        }
+
+        .game-card:hover img {
+            filter: none;
+        }
+
+        .game-title {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-family: var(--font-metal);
+            font-size: 2rem;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px black, 2px 2px 0 black;
+            color: white;
+        }
+
+        /* --- ABOUT: Chaotic Layout --- */
+        #about-chaos {
+            padding: 10rem 10%;
+            /* Vertical Stripes Effect */
+            background:
+                repeating-linear-gradient(90deg,
+                    #1a0505 0px,
+                    #1a0505 100px,
+                    #0f0f0f 100px,
+                    #0f0f0f 200px);
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+
+        .about-frame {
+            border: 8px solid white;
+            padding: 4rem;
+            max-width: 900px;
+            position: relative;
+            transform: rotate(-1.5deg);
+            background: rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+        }
+
+        .about-title {
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%) rotate(1.5deg);
+            font-family: var(--font-horror);
+            font-size: 4rem;
+            color: white;
+            /* Texto blanco más legible */
+            background: #0a0a0a;
+            padding: 0 20px;
+            border: 5px solid white;
+            white-space: nowrap;
+        }
+
+        .about-content {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .about-text {
+            flex: 1;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .about-img-pop {
+            flex: 1;
+            position: relative;
+        }
+
+        .pop-img {
+            width: 120%;
+            border: 3px solid var(--red-blood);
+            transform: rotate(3deg) translateX(10%);
+            box-shadow: 10px 10px 0 black;
+        }
+
+        /* --- FOOTER: Flashlight Effect --- */
+        footer {
+            height: 60vh;
+            background: #050505;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            /* Flashlight Gradient: Transparent circle (light) surrounded by dark shadow */
+            /* We use a pseudo-element or multiple backgrounds to achieve the lighting without hiding text permanently */
+            cursor: none;
+            /* Hide default cursor for spooky effect */
+        }
+
+        /* The dark overlay that hides everything except the flashlight */
+        .flashlight-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+            background: radial-gradient(circle 250px at var(--x, 50%) var(--y, 50%),
+                    transparent 0%,
+                    rgba(0, 0, 0, 0.8) 40%,
+                    rgba(0, 0, 0, 0.98) 100%);
+        }
+
+        .footer-glhf {
+            font-family: var(--font-metal);
+            font-size: 8rem;
+            color: var(--red-blood);
+            text-align: center;
+            white-space: nowrap;
+            /* Text is always there, but darkened by overlay */
+            text-shadow: 0 0 10px red;
+            z-index: 1;
+        }
+
+        .footer-hint {
+            position: absolute;
+            bottom: 20px;
+            font-family: var(--font-sans);
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 0.9rem;
+            pointer-events: none;
+            z-index: 10;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+
+        @keyframes flicker {
+
+            0%,
+            19%,
+            21%,
+            23%,
+            25%,
+            54%,
+            56%,
+            100% {
+                opacity: 0.3;
+            }
+
+            20%,
+            24%,
+            55% {
+                opacity: 0.8;
+                text-shadow: 0 0 20px var(--red-bright);
+            }
+        }
+
+        .monster-hands {
+            position: absolute;
+            bottom: -50px;
+            width: 100%;
+            height: 300px;
+            background: url('../assets/littlebug.png');
+            /* Placeholder for hands */
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center bottom;
+            filter: brightness(0) drop-shadow(0 -10px 20px var(--red-blood));
+            opacity: 0.8;
+        }
+
+        .footer-links {
+            margin-top: 20px;
+            display: flex;
+            gap: 20px;
+            z-index: 10;
+        }
+
+        .footer-links a {
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        /* Responsive */
+        @media(max-width: 768px) {
+            .hero-title {
+                font-size: 3rem;
+            }
+
+            .about-content {
+                flex-direction: column;
+            }
+
+            .footer-glhf {
+                font-size: 4rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="nav-logo">
+            <!-- Logo is minimal in reference or part of the vibe -->
+            <img src="../assets/littlebug.png" alt="LB Logo" style="opacity: 0.8;">
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#">ABOUT US</a></li>
+                <li><a href="#">STEAM</a></li>
+                <li><a href="#">OUR GAMES</a></li>
+                <li><a href="#">CONTACT</a></li>
+                <!-- Social Icons in Nav -->
+                <li><a href="#"><i class="fa-brands fa-discord"></i></a></li>
+                <li><a href="#"><i class="fa-brands fa-facebook"></i></a></li>
+                <li><a href="#"><i class="fa-brands fa-x-twitter"></i></a></li>
+
+                <li><a href="index.html" onclick="localStorage.setItem('lb-theme', 'ladybug')"
+                        style="color: grey; font-size: 0.8rem; border: 1px solid grey; padding: 2px 5px; border-radius: 4px;">LIGHT
+                        MODE</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="hero">
+        <!-- Layout like Reference: Left Text - Center Frame - Right Button -->
+        <div class="hero-layout">
+            <!-- Left: Building Creativity -->
+            <h1 class="hero-text-left">Building<br>Creativity</h1>
+
+            <!-- Center: Frame with image and branding overlay -->
+            <div class="hero-frame">
+                <!-- Branding overlaps the top of the frame -->
+                <div class="hero-branding">
+                    <h2>LittleBug Studios</h2>
+                    <img src="../assets/littlebug.png" alt="LittleBug" id="hero-bug">
+                </div>
+            </div>
+
+            <!-- Right: Contact Button -->
+            <div class="hero-cta-right">
+                <div class="cta-box">Contact</div>
+            </div>
+        </div>
+
+        <!-- Eye Below: Almond/Oval Shape -->
+        <div class="eye-wrapper-bottom">
+            <div class="eye-container">
+                <div class="eye-ball" id="eye-ball">
+                    <div class="eye-pupil" id="eye-pupil"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="games-grid">
+        <!-- Card 1: Gold Theme -->
+        <div class="game-card card-1">
+            <img src="../assets/toybook.webp" alt="Legendary Hoplite">
+            <div class="game-title">Legendary<br>Bug</div>
+        </div>
+        <!-- Card 2: Red Theme -->
+        <div class="game-card card-2">
+            <img src="../assets/littlebug.png" style="object-fit: contain; padding: 20px; background: #220000;"
+                alt="Shadow Game">
+            <div class="game-title" style="color: var(--red-bright);">Just A<br>Shadow</div>
+        </div>
+        <!-- Card 3: Blue Theme -->
+        <div class="game-card card-3">
+            <img src="../assets/toybook.webp" alt="Galax Go">
+            <div class="game-title" style="color: var(--blue-accent);">Galax<br>Go</div>
+        </div>
+    </section>
+
+    <section id="about-chaos">
+        <div class="about-frame">
+            <div class="about-title">ABOUT US</div>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>LittleBug Studios is an independent game development studio proudly based in the shadows. We are
+                        passionate about crafting games with absolute devotion to darkness.</p>
+                    <br>
+                    <p>Our infernal passion fuels our constant pursuit of growth, enabling us to refine our skills and
+                        adapt to the gaming market's ever-evolving nightmares.</p>
+                </div>
+                <div class="about-img-pop">
+                    <img src="../assets/toybook.webp" class="pop-img" alt="Screenshot">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer id="main-footer">
+        <div class="flashlight-overlay"></div>
+        <div class="footer-glhf">LittleBug Studios</div>
+        <div class="footer-hint">Search the shadows...</div>
+        <div class="monster-hands"></div> <!-- Silueta -->
+        <div class="footer-links">
+            <a href="#"><i class="fa-brands fa-discord"></i></a>
+            <a href="#"><i class="fa-brands fa-steam"></i></a>
+            <a href="#"><i class="fa-brands fa-twitter"></i></a>
+        </div>
+    </footer>
+
+    <script>
+        const eyeBall = document.getElementById('eye-ball');
+        const pupil = document.getElementById('eye-pupil');
+
+        document.addEventListener('mousemove', (e) => {
+            if (!eyeBall || !pupil) return;
+
+            const rect = eyeBall.getBoundingClientRect();
+            const eyeX = rect.left + rect.width / 2;
+            const eyeY = rect.top + rect.height / 2;
+
+            const angle = Math.atan2(e.clientY - eyeY, e.clientX - eyeX);
+
+            // Limit pupil movement radius
+            const maxRadius = 15;
+            const distance = Math.min(maxRadius, Math.hypot(e.clientX - eyeX, e.clientY - eyeY) / 5);
+
+            const pupX = Math.cos(angle) * distance;
+            const pupY = Math.sin(angle) * distance;
+
+            pupil.style.transform = `translate(${pupX}px, ${pupY}px) scaleX(0.5)`; /* Restore cat-eye scale */
+        });
+
+        /* Flashlight Script */
+        const footer = document.getElementById('main-footer');
+        footer.addEventListener('mousemove', (e) => {
+            const rect = footer.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            footer.style.setProperty('--x', `${x}px`);
+            footer.style.setProperty('--y', `${y}px`);
+            footer.style.setProperty('--y', `${y}px`);
+        });
+
+        /* Hero Bug Tracking Script */
+        const heroBug = document.getElementById('hero-bug');
+        document.addEventListener('mousemove', (e) => {
+            if (!heroBug) return;
+
+            const rect = heroBug.getBoundingClientRect();
+            const bugX = rect.left + rect.width / 2;
+            const bugY = rect.top + rect.height / 2;
+
+            // Calculate angle + small movement
+            const angle = Math.atan2(e.clientY - bugY, e.clientX - bugX);
+            const distance = Math.min(20, Math.hypot(e.clientX - bugX, e.clientY - bugY) / 10);
+
+            const moveX = Math.cos(angle) * distance;
+            const moveY = Math.sin(angle) * distance;
+            const rotate = (e.clientX - window.innerWidth / 2) / 20; // Simple rotation tracking
+
+            heroBug.style.transform = `translate(${moveX}px, ${moveY}px) rotate(${rotate}deg)`;
+        });
+
+    </script>
+
+</body>
+
+</html>
