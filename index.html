@@ -387,12 +387,12 @@
 
         /* Capas específicas */
         .layer-bg {
-            background-image: url('../assets/banner.webp');
+            background-image: url('assets/banner.webp');
             z-index: 1;
         }
 
         .layer-mid {
-            background-image: url('../assets/banner2.webp');
+            background-image: url('assets/banner2.webp');
             z-index: 2;
             /* Si banner2 tiene transparencias (PNG/WebP con canal alfa), se verá genial */
         }
@@ -863,42 +863,94 @@
         /* Responsive */
         @media(max-width: 900px) {
             header {
-                padding: 0 1.5rem;
-                justify-content: center;
+                padding: 0 1rem;
+                justify-content: flex-end;
+            }
+
+            header::after {
+                height: calc(100% + 10px);
+                clip-path: polygon(0 0, 100% 0, 100% 92%, 95% 98%, 88% 90%, 80% 96%, 72% 88%, 65% 98%, 58% 90%, 50% 96%, 42% 88%, 35% 98%, 28% 90%, 20% 96%, 12% 88%, 5% 98%, 0 92%);
             }
 
             .logo-badge {
-                left: 1.5rem;
-                width: 60px;
-                height: 80px;
+                left: 1rem;
+                width: 50px;
+                height: 70px;
+                padding: 5px;
+                padding-bottom: 15px;
+            }
+
+            nav a {
+                font-size: 1rem;
+                padding: 5px 8px;
+            }
+
+            nav li:not(:last-child):not(.social-group)::after {
+                margin: 0 5px;
             }
 
             .hero-title h1 {
-                font-size: 4rem;
+                font-size: 3rem;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            #flying-bug {
+                height: 1.5em;
             }
 
             #games {
                 flex-direction: column;
                 text-align: center;
+                padding: 4rem 5%;
             }
 
             .games-txt {
                 padding: 0;
-                margin-bottom: 3rem;
+                margin-bottom: 2rem;
+                max-width: 100%;
+            }
+
+            .games-txt h2 {
+                font-size: 4rem;
+            }
+
+            .gallery-wrap {
+                max-width: 100%;
             }
 
             .arrow-btn {
                 display: none;
             }
 
+            .character-overlay {
+                width: 120px;
+                bottom: -30px;
+                right: -20px;
+            }
+
             .comm-grid {
                 flex-direction: column;
                 text-align: center;
+                gap: 20px;
             }
 
             .comm-txt {
                 text-align: center;
             }
+
+            .comm-txt h2 {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media(max-width: 600px) {
+            nav ul {
+                display: none;
+                /* Simplificamos para no romper el layout en móviles muy pequeños */
+            }
+
+            /* Podríamos añadir un menú hamburguesa aquí, pero por ahora aseguramos que no se rompa */
         }
     </style>
 </head>
@@ -906,7 +958,7 @@
 <body class="theme-ladybug">
 
     <!-- LOGO BADGE -->
-    <div class="logo-badge"><img src="../assets/littlebug.png" alt="LittleBug Studios Logo"></div>
+    <div class="logo-badge"><img src="assets/littlebug.png" alt="LittleBug Studios Logo"></div>
 
     <!-- HEADER -->
     <header>
@@ -938,7 +990,7 @@
         </div>
 
         <div class="hero-title">
-            <h1><img src="../assets/littlebug.png" alt="LittleBug Logo" id="flying-bug">LittleBug Studios</h1>
+            <h1><img src="assets/littlebug.png" alt="LittleBug Logo" id="flying-bug">LittleBug Studios</h1>
         </div>
         <div class="tear-bottom"></div>
     </section>
@@ -956,13 +1008,13 @@
             <button class="arrow-btn prev-btn" onclick="move(-1)"><i class="fa-solid fa-caret-left"></i></button>
             <div class="frame">
                 <div class="screen">
-                    <img src="../assets/toybook.webp" class="active" alt="Game 1">
-                    <img src="../assets/toybook.webp" alt="Game 2">
-                    <img src="../assets/toybook.webp" alt="Game 3">
+                    <img src="assets/toybook.webp" class="active" alt="Game 1">
+                    <img src="assets/toybook.webp" alt="Game 2">
+                    <img src="assets/toybook.webp" alt="Game 3">
                 </div>
             </div>
             <!-- LittleBug fuera del frame, pero dentro de gallery-wrap para que lo siga -->
-            <img src="../assets/littlebug.png" class="character-overlay" alt="LittleBug Character">
+            <img src="assets/littlebug.png" class="character-overlay" alt="LittleBug Character">
             <button class="arrow-btn next-btn" onclick="move(1)"><i class="fa-solid fa-caret-right"></i></button>
 
             <div class="dots">
@@ -991,13 +1043,13 @@
             </div>
         </div>
         <div class="tear-btm"></div>
-        <div class="mid-icon"><img src="../assets/littlebug.png" alt="LittleBug"
+        <div class="mid-icon"><img src="assets/littlebug.png" alt="LittleBug"
                 style="width: 40px; height: 40px; object-fit: contain;"></div>
     </section>
 
     <!-- FOOTER -->
     <footer>
-        <p>&copy; 2024 <img src="../assets/littlebug.png" alt="LittleBug"
+        <p>&copy; 2024 <img src="assets/littlebug.png" alt="LittleBug"
                 style="height: 1.2em; vertical-align: middle; margin: 0 5px;"> LittleBug Studios | <a
                 href="#">Contact</a> | Site designed for
             the hive.</p>
