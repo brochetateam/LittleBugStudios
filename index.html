@@ -356,13 +356,16 @@
         /* Menú Hamburguesa */
         .hamburger {
             display: none;
+            position: fixed;
+            top: 20px;
+            right: 1rem;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             width: 40px;
             height: 40px;
             cursor: pointer;
-            z-index: 1002;
+            z-index: 1010;
             background: transparent;
             border: none;
             padding: 5px;
@@ -436,6 +439,52 @@
 
         .mobile-menu .mobile-social a {
             font-size: 1.5rem;
+        }
+
+        /* Theme Switcher dentro del menú móvil */
+        .mobile-menu .mobile-theme-switcher {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            padding: 15px 25px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+        }
+
+        .mobile-menu .mobile-theme-switcher .theme-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 3px solid rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .mobile-menu .mobile-theme-switcher .theme-btn:hover {
+            transform: scale(1.2);
+            border-color: white;
+        }
+
+        .mobile-menu .mobile-theme-switcher .btn-ladybug {
+            background: #e63d33;
+        }
+
+        .mobile-menu .mobile-theme-switcher .btn-original {
+            background: #36cba8;
+        }
+
+        .mobile-menu .mobile-theme-switcher .btn-forest {
+            background: #4a7c44;
+        }
+
+        .mobile-menu .mobile-theme-switcher .btn-honey {
+            background: #f9a620;
+        }
+
+        .mobile-menu .mobile-theme-switcher .btn-shadow {
+            background: #000;
+            border-color: #ff0000;
+            position: relative;
         }
 
         /* --- 3. HERO --- */
@@ -1126,6 +1175,11 @@
                 width: 18px;
                 height: 18px;
             }
+
+            /* Ocultar el switcher flotante en móvil ya que está en el menú */
+            #theme-switcher {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -1174,6 +1228,15 @@
             <a href="#"><i class="fa-brands fa-youtube"></i></a>
             <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
             <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
+        </div>
+        <!-- Theme Switcher para móvil -->
+        <div class="mobile-theme-switcher">
+            <div class="theme-btn btn-ladybug" onclick="setTheme('ladybug'); closeMenu();" title="Ladybug Theme"></div>
+            <div class="theme-btn btn-original" onclick="setTheme('original'); closeMenu();" title="Original Teal">
+            </div>
+            <div class="theme-btn btn-forest" onclick="setTheme('forest'); closeMenu();" title="Forest Theme"></div>
+            <div class="theme-btn btn-honey" onclick="setTheme('honey'); closeMenu();" title="Honey Theme"></div>
+            <div class="theme-btn btn-shadow" onclick="setTheme('shadow'); closeMenu();" title="Shadow Mode"></div>
         </div>
     </div>
 
@@ -1276,17 +1339,16 @@
             dots[idx].classList.add('active');
         }
 
-        // Parallax Effect (Blocked/Static as requested)
+        // Parallax Effect & LittleBug Logic
         const hero = document.getElementById('hero');
         const layers = document.querySelectorAll('.parallax-layer');
         const flyingBug = document.getElementById('flying-bug');
 
-        hero.addEventListener('mousemove', (e) => {
-            const { clientX, clientY } = e;
+        function handleMove(clientX, clientY) {
             const centerX = window.innerWidth / 2;
             const centerY = window.innerHeight / 2;
 
-            /* Parallax bloqueado pero mantenido en código
+            /* Parallax bloqueado pero mantenido en código (Activar solo si se desea parallax de fondo)
             layers.forEach(layer => {
                 const speed = layer.getAttribute('data-speed');
                 const x = (centerX - clientX) * speed;
@@ -1295,13 +1357,34 @@
             });
             */
 
-            // Efecto de LittleBug voladora siguiendo al cursor
+            // Efecto de LittleBug voladora siguiendo al input
             if (flyingBug) {
-                const moveX = (clientX - centerX) * 0.1; // Ajusta 0.1 para más o menos rango
+                // Removemos la animación CSS cuando el usuario interactúa
+                flyingBug.style.animation = 'none';
+
+                const moveX = (clientX - centerX) * 0.1;
                 const moveY = (clientY - centerY) * 0.1;
-                // Pequeña rotación para que parezca que vuela hacia la dirección
                 const rotate = moveX * 0.5;
                 flyingBug.style.transform = `translate(${moveX}px, ${moveY}px) rotate(${rotate}deg)`;
+            }
+        }
+
+        // Mouse
+        hero.addEventListener('mousemove', (e) => {
+            handleMove(e.clientX, e.clientY);
+        });
+
+        // Touch (para móviles)
+        hero.addEventListener('touchmove', (e) => {
+            // e.preventDefault(); // Opcional: Evitar scroll mientras se juega con el bicho
+            const touch = e.touches[0];
+            handleMove(touch.clientX, touch.clientY);
+        });
+
+        // Reset animation on touch end (opcional, para volver a idle)
+        hero.addEventListener('touchend', () => {
+            if (flyingBug && window.innerWidth <= 900) {
+                flyingBug.style.animation = 'fly-idle 6s ease-in-out infinite';
             }
         });
 

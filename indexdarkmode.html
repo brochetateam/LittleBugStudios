@@ -567,13 +567,16 @@
         /* Menú Hamburguesa */
         .hamburger {
             display: none;
+            position: fixed;
+            top: 25px;
+            right: 5%;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             width: 40px;
             height: 40px;
             cursor: pointer;
-            z-index: 1002;
+            z-index: 1010;
             background: transparent;
             border: none;
             padding: 5px;
@@ -772,7 +775,74 @@
             #about-chaos {
                 padding: 6rem 5%;
             }
+
+            /* --- Animaciones Idle para Móvil --- */
+
+            /* 1. Flashlight Scanning */
+            @keyframes scan-light {
+                0% {
+                    --x: 10%;
+                    --y: 50%;
+                }
+
+                50% {
+                    --x: 90%;
+                    --y: 50%;
+                }
+
+                100% {
+                    --x: 10%;
+                    --y: 50%;
+                }
+            }
+
+            /* Para que funcione la variable CSS en keyframes necesitamos definir la propiedad en un navegador moderno o usar JS. 
+               Como fallback simple en CSS puro, animaremos background-position si fuera imagen, pero aquí usamos radial-gradient con variables.
+               La mejor forma automática en CSS puro para mover el gradiente es animar background-position de un pseudo-elemento.
+               Pero como usamos --x/--y en el gradiente, la forma más compatible es JS. 
+               Sin embargo, podemos intentar simularlo moviendo el contenedor del overlay si es posible, o dejaremos esto para JS.
+               
+               PLAN B: Usaremos JS para la animación 'idle' de la linterna para asegurar compatibilidad.
+               
+               PLAN A (CSS Eye): El ojo sí es fácil con CSS.
+            */
+
+            @keyframes look-around {
+                0% {
+                    transform: translate(0, 0) scaleX(0.4);
+                }
+
+                20% {
+                    transform: translate(-10px, -5px) scaleX(0.4);
+                }
+
+                /* Mira izq arriba */
+                40% {
+                    transform: translate(10px, 5px) scaleX(0.4);
+                }
+
+                /* Mira der abajo */
+                60% {
+                    transform: translate(-5px, 10px) scaleX(0.4);
+                }
+
+                /* Mira abajo */
+                80% {
+                    transform: translate(10px, 0) scaleX(0.4);
+                }
+
+                /* Mira derecha */
+                100% {
+                    transform: translate(0, 0) scaleX(0.4);
+                }
+            }
+
+            #eye-pupil {
+                /* Animación por defecto en móvil */
+                animation: look-around 4s ease-in-out infinite;
+            }
         }
+
 
         @media(max-width: 768px) {
             nav ul {
@@ -887,13 +957,14 @@
                         MODE</a></li>
             </ul>
         </nav>
-        <!-- Botón Hamburguesa -->
-        <button class="hamburger" id="hamburger" aria-label="Abrir menú">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
     </header>
+
+    <!-- Botón Hamburguesa (Fuera del header para evitar clip-path) -->
+    <button class="hamburger" id="hamburger" aria-label="Abrir menú">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
 
     <!-- Menú Móvil Overlay -->
     <div class="mobile-menu" id="mobile-menu">
@@ -992,57 +1063,143 @@
     </footer>
 
     <script>
+        /* --- LOGIC: Eye & Flashlight (Mouse + Touch + Idle) --- */
+
         const eyeBall = document.getElementById('eye-ball');
         const pupil = document.getElementById('eye-pupil');
+        const footer = document.getElementById('main-footer');
+        const heroBug = document.getElementById('hero-bug');
+        const heroSection = document.getElementById('hero');
 
-        document.addEventListener('mousemove', (e) => {
+        // --- 1. EYE TRACKING ---
+        function movePupil(clientX, clientY) {
             if (!eyeBall || !pupil) return;
+
+            // Pausar animación idle si existe
+            pupil.style.animation = 'none';
 
             const rect = eyeBall.getBoundingClientRect();
             const eyeX = rect.left + rect.width / 2;
             const eyeY = rect.top + rect.height / 2;
 
-            const angle = Math.atan2(e.clientY - eyeY, e.clientX - eyeX);
-
-            // Limit pupil movement radius
+            const angle = Math.atan2(clientY - eyeY, clientX - eyeX);
             const maxRadius = 15;
-            const distance = Math.min(maxRadius, Math.hypot(e.clientX - eyeX, e.clientY - eyeY) / 5);
+            const distance = Math.min(maxRadius, Math.hypot(clientX - eyeX, clientY - eyeY) / 5);
 
             const pupX = Math.cos(angle) * distance;
             const pupY = Math.sin(angle) * distance;
 
-            pupil.style.transform = `translate(${pupX}px, ${pupY}px) scaleX(0.5)`; /* Restore cat-eye scale */
-        });
+            pupil.style.transform = `translate(${pupX}px, ${pupY}px) scaleX(0.5)`;
+        }
 
-        /* Flashlight Script */
-        const footer = document.getElementById('main-footer');
-        footer.addEventListener('mousemove', (e) => {
-            const rect = footer.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            footer.style.setProperty('--x', `${x}px`);
-            footer.style.setProperty('--y', `${y}px`);
-            footer.style.setProperty('--y', `${y}px`);
-        });
+        function resetEye() {
+            if (pupil && window.innerWidth <= 900) {
+                pupil.style.animation = 'look-around 4s ease-in-out infinite';
+            }
+        }
 
-        /* Hero Bug Tracking Script */
-        const heroBug = document.getElementById('hero-bug');
+        // Mouse Eye
         document.addEventListener('mousemove', (e) => {
-            if (!heroBug) return;
+            movePupil(e.clientX, e.clientY);
+        });
 
+        // Touch Eye (Si tocan cerca del héroe)
+        if (heroSection) {
+            heroSection.addEventListener('touchmove', (e) => {
+                const t = e.touches[0];
+                movePupil(t.clientX, t.clientY);
+            });
+            heroSection.addEventListener('touchend', resetEye);
+        }
+
+        // --- 2. HERO BUG TRACKING ---
+        function trackBug(cx, cy) {
+            if (!heroBug) return;
             const rect = heroBug.getBoundingClientRect();
             const bugX = rect.left + rect.width / 2;
             const bugY = rect.top + rect.height / 2;
-
-            // Calculate angle + small movement
-            const angle = Math.atan2(e.clientY - bugY, e.clientX - bugX);
-            const distance = Math.min(20, Math.hypot(e.clientX - bugX, e.clientY - bugY) / 10);
-
+            const angle = Math.atan2(cy - bugY, cx - bugX);
+            const distance = Math.min(20, Math.hypot(cx - bugX, cy - bugY) / 10);
             const moveX = Math.cos(angle) * distance;
             const moveY = Math.sin(angle) * distance;
-            const rotate = (e.clientX - window.innerWidth / 2) / 20; // Simple rotation tracking
-
+            const rotate = (cx - window.innerWidth / 2) / 20;
             heroBug.style.transform = `translate(${moveX}px, ${moveY}px) rotate(${rotate}deg)`;
+        }
+
+        document.addEventListener('mousemove', (e) => {
+            trackBug(e.clientX, e.clientY);
+        });
+
+        if (heroSection) {
+            heroSection.addEventListener('touchmove', (e) => {
+                const t = e.touches[0];
+                trackBug(t.clientX, t.clientY);
+            });
+        }
+
+        // --- 3. FLASHLIGHT FOOTER ---
+
+        // Variables para animación automática (Scanning)
+        let scanId = null;
+        let scanTime = 0;
+
+        function startScan() {
+            if (window.innerWidth > 900) return; // Solo móvil
+            if (scanId) return;
+
+            function animateScan() {
+                scanTime += 0.03;
+                // Movimiento senoidal de lado a lado
+                const xPct = 50 + 40 * Math.sin(scanTime);
+                if (footer) {
+                    footer.style.setProperty('--x', `${xPct}%`);
+                    footer.style.setProperty('--y', `50%`);
+                }
+                scanId = requestAnimationFrame(animateScan);
+            }
+            scanId = requestAnimationFrame(animateScan);
+        }
+
+        function stopScan() {
+            if (scanId) {
+                cancelAnimationFrame(scanId);
+                scanId = null;
+            }
+        }
+
+        if (window.innerWidth <= 900) startScan();
+
+        function moveFlashlight(cx, cy) {
+            stopScan(); // Parar auto-scan si el usuario interactúa
+            if (!footer) return;
+            const rect = footer.getBoundingClientRect();
+            const x = cx - rect.left;
+            const y = cy - rect.top;
+            footer.style.setProperty('--x', `${x}px`);
+            footer.style.setProperty('--y', `${y}px`);
+        }
+
+        if (footer) {
+            footer.addEventListener('mousemove', (e) => {
+                moveFlashlight(e.clientX, e.clientY);
+            });
+
+            footer.addEventListener('touchmove', (e) => {
+                // e.preventDefault(); // Comentado para no bloquear scroll completamente, evaluar UX
+                const t = e.touches[0];
+                moveFlashlight(t.clientX, t.clientY);
+            });
+
+            footer.addEventListener('touchend', () => {
+                // Reiniciar scan después de soltar
+                if (window.innerWidth <= 900) startScan();
+            });
+        }
+
+        // Handle Resize
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 900) stopScan();
+            else startScan();
         });
 
         // Menú Hamburguesa
